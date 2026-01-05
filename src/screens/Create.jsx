@@ -9,6 +9,7 @@ const Create = ({data,setdata}) => {
   const [isEdit,setIsEdit] =useState(false);
   const [editItemId,seteditItemId] = useState(null);
   const handleAdditem=()=>{
+    if (!itemName.trim()) return;
     const newItem ={
         id:Date.now(),
         name:itemName,
@@ -41,6 +42,11 @@ const Create = ({data,setdata}) => {
   seteditItemId(null);
 };
 
+const handleItemNameChange=(text)=>{
+  const filteredText = text.replace(/[^a-zA-Z\s]/g, '')
+  setItemName(filteredText)
+}
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -48,7 +54,7 @@ const Create = ({data,setdata}) => {
         placeholderTextColor="#999"
         style={styles.input}
         value={itemName}
-        onChangeText={item => setItemName(item)}
+        onChangeText={handleItemNameChange}
       />
       <TextInput
         placeholder="Enter an item name.."
@@ -102,7 +108,7 @@ export default Create;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: '4%',
+    paddingVertical:'4%',
     gap: 10,
   },
   input: {
@@ -113,7 +119,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   addbutton: {
-    backgroundColor: '#CABFEEFF',
+    backgroundColor: '#7762beff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 7,
@@ -125,26 +131,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-    headingContainer:{
-        flexDirection:"row",
-        justifyContent:"space-between",
-        paddingHorizontal:15,
-        paddingVertical:10
-    },
-    headingText:{
-        fontWeight:"500",
-        fontSize:16,
-        marginVertical:10
-    },
-    itemContainer:{
-        flexDirection:"row",
-        justifyContent:"space-between",
-        paddingHorizontal:15,
-        paddingVertical:10,
-        borderRadius:7
-    },
-    itemText:{
-        fontWeight:"400",
-        fontSize:14
-    }
+  headingContainer:{
+    flexDirection:"row",
+    justifyContent:"space-between",
+    paddingHorizontal:15,
+    paddingVertical:10
+  },
+  headingText:{
+    fontWeight:"500",
+    fontSize:16,
+    marginVertical:10
+  },
+  itemContainer:{
+    flexDirection:"row",
+    justifyContent:"space-between",
+    paddingHorizontal:15,
+    paddingVertical:10,
+    borderRadius:7
+  },
+  itemText:{
+    fontWeight:"400",
+    fontSize:14
+  }
 });

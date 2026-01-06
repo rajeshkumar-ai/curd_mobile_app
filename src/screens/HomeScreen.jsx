@@ -3,19 +3,16 @@ import CreateScreen from './Create';
 import AllItems from './AllItems';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState,useEffect } from 'react';
+import { useContext } from 'react';
+import { ItemContext } from '../context/ItemContext';
 
 
 const STORAGE_KEY = "item_data";
 
 const HomeScreen = () => {
+  const { data, setData } = useContext(ItemContext);
   const [view,setView] =useState(0);
-  const [data,setData]=useState([
-  {id:1,name:'Wheat',stock:5,unit:"kg"},
-  {id:2,name:'Rice',stock:15,unit:"kg"},
-  {id:3,name:'Basmati Rice',stock:25,unit:"kg"},
-  {id:4,name:'Pulse',stock:50,unit:"kg"},
-  {id:5,name:'Corn',stock:19,unit:"kg"},
-])
+
 useEffect(()=>{
   const loadData = async()=>{
     const storedData =await AsyncStorage.getItem(STORAGE_KEY);
@@ -62,7 +59,7 @@ const styles = StyleSheet.create({
     width:"100%",
     height:"100%",
     padding:20,
-    backgroundColor:"#ffffff"
+    backgroundColor:"#b13838fc"
   },
   title:{
     fontSize:24,

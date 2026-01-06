@@ -1,51 +1,63 @@
-import  { useState } from 'react';
-import { 
-  StyleSheet, Text, TextInput, View, Pressable, FlatList 
+import { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Pressable,
+  FlatList,
 } from 'react-native';
+import { useContext } from "react";
+import { ItemContext } from "../context/ItemContext";
 
-const Create = ({data,setdata}) => {
+const Create = ({ setdata }) => {
+  const { data, setData, deletedItems, setDeletedItems } = useContext(ItemContext);
   const [itemName, setItemName] = useState('');
   const [stock, setStock] = useState('');
-  const [isEdit,setIsEdit] =useState(false);
-  const [editItemId,seteditItemId] = useState(null);
-  const handleAdditem=()=>{
+  const [isEdit, setIsEdit] = useState(false);
+  const [editItemId, seteditItemId] = useState(null);
+  const handleAdditem = () => {
     if (!itemName.trim()) return;
-    const newItem ={
-        id:Date.now(),
-        name:itemName,
-        stock:stock
-    }
-    setdata([...data,newItem])
+    const newItem = {
+      id: Date.now(),
+      name: itemName,
+      stock: stock,
+    };
+    setdata([...data, newItem]);
     setItemName('');
     setStock('');
     setIsEdit(false);
-  }
-  const deleteItemHandler=(id)=>{
-    setdata(data.filter((item)=>item.id !== id))
-  }
-  const editItemHandler=(item)=>{
+  };
+  //changed here because when i want to delete the the item that can store inside trash that is doing here
+  const deleteItemHandler = item => {
+    setData(data.filter(i => i.id !== item.id));
+    setDeletedItems([...deletedItems, item]);
+  };
+  const editItemHandler = item => {
     setIsEdit(true);
     setItemName(item.name);
     setStock(item.stock);
     seteditItemId(item.id);
-  }
+  };
   const updateItemHandler = () => {
-  setdata(data.map(item =>
-    item.id === editItemId
-      ? { ...item, name: itemName, stock: stock }
-      : item
-  ));
+    setdata(
+      data.map(item =>
+        item.id === editItemId
+          ? { ...item, name: itemName, stock: stock }
+          : item,
+      ),
+    );
 
-  setItemName('');
-  setStock('');
-  setIsEdit(false);
-  seteditItemId(null);
-};
+    setItemName('');
+    setStock('');
+    setIsEdit(false);
+    seteditItemId(null);
+  };
 
-const handleItemNameChange=(text)=>{
-  const filteredText = text.replace(/[^a-zA-Z\s]/g, '')
-  setItemName(filteredText)
-}
+  const handleItemNameChange = text => {
+    const filteredText = text.replace(/[^a-zA-Z\s]/g, '');
+    setItemName(filteredText);
+  };
 
   return (
     <View style={styles.container}>
@@ -57,18 +69,19 @@ const handleItemNameChange=(text)=>{
         onChangeText={handleItemNameChange}
       />
       <TextInput
-        placeholder="Enter an item name.."
+        placeholder="Enter an item quantity..."
         placeholderTextColor="#999"
         style={styles.input}
         value={stock}
         onChangeText={item => setStock(item)}
       />
-      <Pressable style={styles.addbutton}
-      onPress={()=>isEdit ? updateItemHandler() : handleAdditem()}
+      <Pressable
+        style={styles.addbutton}
+        onPress={() => (isEdit ? updateItemHandler() : handleAdditem())}
       >
-        <Text style={styles.btnText}>{isEdit ? "Edit Item" : "Add Item"}</Text>
+        <Text style={styles.btnText}>{isEdit ? 'Edit Item' : 'Add Item'}</Text>
       </Pressable>
-      <View style={{marginTop:10}}>
+      <View style={{flex:1, marginTop: 10 }}>
         <View style={styles.headingContainer}>
           <Text style={styles.headingText}>Items</Text>
           <Text>Quantity</Text>
@@ -84,14 +97,14 @@ const handleItemNameChange=(text)=>{
               ]}
             >
               <Text style={styles.itemText}>{item.name}</Text>
-              <View style={{flexDirection:"row",gap:20}}>
-              <Text style={styles.itemText}>{item.stock}</Text>
-              {/* items ko bhja because jab me click karu tab mereko wo item dikhe TextInput ke andar  */}
-                <Pressable onPress={()=>editItemHandler(item)}>
-                    <Text style={styles.itemText}>Edit</Text>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <Text style={styles.itemText}>{item.stock}</Text>
+                {/* items ko bhja because jab me click karu tab mereko wo item dikhe TextInput ke andar  */}
+                <Pressable onPress={() => editItemHandler(item)}>
+                  <Text style={styles.itemText}>Edit</Text>
                 </Pressable>
-                <Pressable onPress={()=>deleteItemHandler(item.id)}>
-                    <Text style={styles.itemText}>Delete</Text>
+                <Pressable onPress={() => deleteItemHandler(item)}>
+                  <Text style={styles.itemText}>Delete</Text>
                 </Pressable>
               </View>
             </View>
@@ -108,7 +121,8 @@ export default Create;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical:'4%',
+    flex:1,
+    paddingVertical: '4%',
     gap: 10,
   },
   input: {
@@ -131,26 +145,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-  headingContainer:{
-    flexDirection:"row",
-    justifyContent:"space-between",
-    paddingHorizontal:15,
-    paddingVertical:10
+  headingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
-  headingText:{
-    fontWeight:"500",
-    fontSize:16,
-    marginVertical:10
+  headingText: {
+    fontWeight: '500',
+    fontSize: 16,
+    marginVertical: 10,
   },
-  itemContainer:{
-    flexDirection:"row",
-    justifyContent:"space-between",
-    paddingHorizontal:15,
-    paddingVertical:10,
-    borderRadius:7
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 7,
   },
-  itemText:{
-    fontWeight:"400",
-    fontSize:14
-  }
+  itemText: {
+    fontWeight: '400',
+    fontSize: 14,
+  },
 });

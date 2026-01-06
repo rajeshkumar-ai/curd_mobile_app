@@ -1,17 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import HomeScreen from "./src/screens/HomeScreen"
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import TabNavigator from './src/navigation/TabNavigation';
+import { NavigationContainer } from '@react-navigation/native';
+import ItemProvider from './src/context/ItemContext';
 
 const App = () => {
   return (
-    
-   <SafeAreaView style={{flex:1}}>
-      <HomeScreen/>
-   </SafeAreaView>
-  )
-}
+    <ItemProvider>
+      <NavigationContainer>
+        <SafeAreaView style={{ flex: 1 }}>
+          <TabNavigator />
+        </SafeAreaView>
+      </NavigationContainer>
+    </ItemProvider>
+  );
+};
 
-export default App
+export default App;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
